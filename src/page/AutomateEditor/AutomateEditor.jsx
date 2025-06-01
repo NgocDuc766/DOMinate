@@ -62,55 +62,28 @@ const BlockContainer = ({ id, blocks, setBlocks }) => {
       );
     }
 
-    if (block.type === BlockTypes.MATH) {
-      const container = blocks.find(b => b.id === id);
-      return (
-        <div style={styles.block}>
-          <strong style={{ color: 'red' }}>Math</strong>:&nbsp;
-          <select
-            value={block.operator}
-            onChange={(e) => updateChild(block.id, { operator: e.target.value })}
-          >
-            <option value="+">+</option>
-            <option value="-">-</option>
-            <option value="*">*</option>
-            <option value="/">/</option>
-          </select>
-          &nbsp;
-          <select
-            value={block.inputs?.[0] || ''}
-            onChange={(e) =>
-              updateChild(block.id, { inputs: [e.target.value, block.inputs?.[1]] })
-            }
-          >
-            <option value="">A block</option>
-            {container?.children
-              .filter(b => b.id !== block.id)
-              .map(b => (
-                <option key={b.id} value={b.id}>
-                  {b.name ? `${b.name} (#${b.id.slice(0, 4)})` : `#${b.id.slice(0, 4)}`}
-                </option>
-              ))}
-          </select>
-          &nbsp;
-          <select
-            value={block.inputs?.[1] || ''}
-            onChange={(e) =>
-              updateChild(block.id, { inputs: [block.inputs?.[0], e.target.value] })
-            }
-          >
-            <option value="">B block</option>
-            {container?.children
-              .filter(b => b.id !== block.id)
-              .map(b => (
-                <option key={b.id} value={b.id}>
-                  {b.name ? `${b.name} (#${b.id.slice(0, 4)})` : `#${b.id.slice(0, 4)}`}
-                </option>
-              ))}
-          </select>
-        </div>
-      );
-    }
+   if (block.type === BlockTypes.MATH) {
+  return (
+    <div style={styles.block}>
+      <strong style={{ color: 'red' }}>Math</strong>:&nbsp;
+      <input
+        type="text"
+        placeholder="Result variable name"
+        value={block.name || ''}
+        onChange={e => updateChild(block.id, { name: e.target.value })}
+        style={{ width: '100px', marginRight: '10px' }}
+      />
+      <input
+        type="text"
+        placeholder="Expression (e.g. a+b)"
+        value={block.expression || ''}
+        onChange={e => updateChild(block.id, { expression: e.target.value })}
+        style={{ width: '200px' }}
+      />
+    </div>
+  );
+}
+
   };
 
   const current = blocks.find(b => b.id === id);
@@ -141,37 +114,62 @@ const AutomateEditor = () => {
     setBlocks(prev => [...prev, { id, children: [] }]);
   };
 
-  const getChildValue = (blockId) => {
-    let targetBlock;
-    blocks.forEach(container => {
-      const found = container.children.find(b => b.id === blockId);
-      if (found) targetBlock = found;
+  const executeMath = () => {
+  if (!selectedMathId) return;
+
+  const target = blocks
+    .flatMap(container => container.children)
+    .find(b => b.id === selectedMathId);
+
+  if (!target || !target.expression || !target.name) return;
+
+  // Biến env: chứa tất cả biến kiểu VAR
+  const env = {};
+  blocks.forEach(container => {
+    container.children.forEach(b => {
+      if (b.type === BlockTypes.VAR && b.name) {
+        env[b.name] = Number(b.value) || 0;
+      }
     });
-    if (!targetBlock) return 0;
+  });
 
-    if (targetBlock.type === BlockTypes.VAR) return Number(targetBlock.value) || 0;
+  try {
+    const expr = target.expression.replace(/[^\w\d+\-*/(). ]/g, '');
+    const func = new Function(...Object.keys(env), `return ${expr};`);
+    const val = func(...Object.values(env));
 
-    if (targetBlock.type === BlockTypes.MATH) {
-      const [aId, bId] = targetBlock.inputs || [];
-      const a = getChildValue(aId);
-      const b = getChildValue(bId);
-      switch (targetBlock.operator) {
-        case '+': return a + b;
-        case '-': return a - b;
-        case '*': return a * b;
-        case '/': return b !== 0 ? a / b : 0;
-        default: return 0;
+    // Gán kết quả cho biến mới hoặc cập nhật
+    const newBlocks = [...blocks];
+    let found = false;
+    for (const container of newBlocks) {
+      for (const b of container.children) {
+        if (b.type === BlockTypes.VAR && b.name === target.name) {
+          b.value = val;
+          found = true;
+        }
       }
     }
 
-    return 0;
-  };
+    // Nếu chưa có biến với name đó → tạo mới
+    if (!found) {
+      const newVar = {
+        id: Math.random().toString(36).substring(2, 9),
+        type: BlockTypes.VAR,
+        name: target.name,
+        value: val,
+        operator: '+',
+        inputs: [],
+      };
+      newBlocks[0]?.children.push(newVar); // thêm vào container đầu tiên
+    }
 
-  const executeMath = () => {
-    if (!selectedMathId) return;
-    const val = getChildValue(selectedMathId);
+    setBlocks(newBlocks);
     setResult(val);
-  };
+  } catch (e) {
+    alert('Biểu thức không hợp lệ!');
+  }
+};
+
 
   const allMathBlocks = blocks
     .flatMap(container => container.children)
