@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Core.Browser
 {
-    internal class BrowserManager
+    public class BrowserManager
     {
+
     }
 }
