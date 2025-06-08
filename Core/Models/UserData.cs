@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class Variables
+    public class UserData
     {
         public string Key { get; set; }
         public string Value { get; set; }
 
-        public Variables() { }
+        public UserData() { }
 
-        public Variables(string key, string value)
+        public UserData(string key, string value)
         {
             Key = key;
             Value = value;
