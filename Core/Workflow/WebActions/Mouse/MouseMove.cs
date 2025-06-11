@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Workflow.WebActions
 {
-    public class Click
+    internal class MouseMove
     {
-
     }
 }
