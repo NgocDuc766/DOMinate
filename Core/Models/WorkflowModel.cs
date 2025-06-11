@@ -1,4 +1,4 @@
-﻿using Core.Workflow.BasicActions;
+﻿using Core.Workflow;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.DevTools.V135.Runtime;
 using System;
@@ -143,7 +143,7 @@ namespace Core.Models
                 }
 
                 // handle Variables
-                var variablesData = parsedJson["Variables"];
+                var variablesData = parsedJson["GlobalVariables"];
                 if (variablesData != null)
                 {
                     GlobalVariables.Clear();

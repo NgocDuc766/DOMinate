@@ -1,5 +1,6 @@
 ﻿using Core.Models;
 using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
 using OpenQA.Selenium.DevTools.V135.Browser;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Workflow.BasicActions
+namespace Core.Workflow
 {
     public abstract class BaseAction
     {
@@ -22,11 +23,28 @@ namespace Core.Workflow.BasicActions
             set => _payload = value;
         }
         public WorkflowModel WorkflowModel { get; set; }
+        
+        protected IWebDriver WebDriver { get; set; }
 
+        // constructor with web driver
+        public BaseAction(IWebDriver driver)
+        {
+            WebDriver = driver ?? throw new ArgumentNullException(nameof(driver), "Web driver cannot be null!");
+        }
 
         // implement function
         protected abstract dynamic PerformAction();
         protected internal abstract void ValidatePayload();
         public abstract JObject GetDefaultPayload();
+
+        public dynamic Execute()
+        {
+            Console.WriteLine($"Executing action: ID: '{Id}', Type: '{ActionType}' with payload: '{Payload}' at '{DateTime.Now}'");
+            var resultAction = PerformAction();
+
+            Console.WriteLine($"Executing action ID '{Id}' with result is '{resultAction}' at '{DateTime.Now}'");
+            return resultAction;
+        }
+
     }
 }
