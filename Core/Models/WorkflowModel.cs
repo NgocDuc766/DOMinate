@@ -1,5 +1,6 @@
 ﻿using Core.Workflow;
 using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
 using OpenQA.Selenium.DevTools.V135.Runtime;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Core.Models
         private List<BaseAction> _workflow = new List<BaseAction>();
         private List<GlobalVariables> _globalVariables = new List<GlobalVariables>();
         private List<UserData> _userData = new List<UserData>();
-
+        // khởi tạo sẵn 1 web driver cho mỗi 1 web driver
         public Guid Id
         {
             get => _id;
@@ -91,6 +92,7 @@ namespace Core.Models
             var variable = new GlobalVariables(key, value);
             GlobalVariables.Add(variable);
         }
+
         public void AddUserData(string key, JToken value)
         {
             if (string.IsNullOrEmpty(key))

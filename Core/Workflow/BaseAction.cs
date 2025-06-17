@@ -24,7 +24,7 @@ namespace Core.Workflow
         }
         public WorkflowModel WorkflowModel { get; set; }
         
-        protected IWebDriver WebDriver { get; set; }
+        public IWebDriver WebDriver { get; set; }
 
         // constructor with web driver
         public BaseAction(IWebDriver driver)
