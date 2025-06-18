@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dev"
         mc:Ignorable="d"
+        KeyDown="MainWindow_KeyDown"
+        FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Self}}"
         Title="Workflow Editor" Height="500" Width="1100"
         Background="#151A1C">
     <Grid>
@@ -34,9 +36,31 @@
         </StackPanel>
 
         <!-- Khu vực làm việc chính -->
-        <Border Grid.Column="1" Background="#657A85" Margin="10">
-            <TextBlock Text="Workflow Editor" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </Border>
+        <Grid Grid.Column="1" Background="#657A85" Margin="10">
+            <StackPanel x:Name="ActionListPanel" Margin="10">
+                <TextBlock Text="Workflow Editor"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,10"/>
+                <!-- Các Button sẽ được thêm vào đây -->
+                <StackPanel Tag="Default"  Orientation="Horizontal" Margin="0">
+                    <Button Content="Before browser open" Padding="10" Margin="5"
+            Background="#1D2326" Foreground="White" FontWeight="Bold" MinWidth="200px" Click="DefaultButton_Click"/>
+                </StackPanel>
+                <StackPanel Tag="Default" Orientation="Horizontal" Margin="0">
+                    <Button Content="Main logic" Padding="10" Margin="5"
+            Background="#1D2326" Foreground="White" FontWeight="Bold" MinWidth="200px" Click="DefaultButton_Click" AutomationProperties.Name="mainlogic"/>
+                </StackPanel>
+                <StackPanel Tag="Default" Orientation="Horizontal" Margin="0">
+                    <Button Content="After browser close" Padding="10" Margin="5"
+            Background="#1D2326" Foreground="White" FontWeight="Bold" MinWidth="200px" Click="DefaultButton_Click" />
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+
 
         <StackPanel Grid.Column="2" Margin="10">
 
