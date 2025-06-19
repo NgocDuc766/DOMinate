@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Workflow.WebActions.Mouse
+namespace Core.Workflow.WebActions
 {
     public class MouseMove : BaseAction
     {
