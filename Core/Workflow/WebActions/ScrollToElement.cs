@@ -10,9 +10,6 @@ namespace Core.Workflow.WebActions
 {
     public class ScrollToElement : BaseAction
     {
-        public ScrollToElement(IWebDriver driver) : base(driver)
-        {
-        }
 
         public override JObject GetDefaultPayload()
         {
@@ -26,17 +23,17 @@ namespace Core.Workflow.WebActions
         protected override dynamic PerformAction()
         {
             ValidatePayload();
-            HandleScrollToElement(Payload["DelayTime"].ToString(), Payload["Xpath"].ToString());
+            HandleScrollToElement(Payload["Delay"].ToString(), Payload["Xpath"].ToString());
             return "Scroll to element performed";
         }
 
         protected internal override void ValidatePayload()
         {
-            if (!Payload.ContainsKey("DelayTime"))
+            if (!Payload.ContainsKey("Delay"))
             {
                 throw new ArgumentException("DelayTime is required!");
             }
-            if (!int.TryParse(Payload["DelayTime"].ToString(), out int delay) || delay < 0)
+            if (!int.TryParse(Payload["Delay"].ToString(), out int delay) || delay < 0)
             {
                 throw new ArgumentException("DelayTime must be a non-negative integer!");
             }

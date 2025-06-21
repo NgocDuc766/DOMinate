@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Browser;
 
 namespace Core.Models
 {
@@ -53,7 +54,7 @@ namespace Core.Models
                     _globalVariables = value;
                 }
             }
-        } 
+        }
 
         public List<BaseAction> Workflow
         {
@@ -198,7 +199,7 @@ namespace Core.Models
                     {
                         string actionId = action["Id"]?.ToString();
                         string actionName = action["ActionName"]?.ToString();
-                        string actionType = action["Type"]?.ToString();
+                        string actionType = action["ActionType"]?.ToString();
                         JObject payload = action["Payload"] as JObject;
 
                         if (string.IsNullOrEmpty(actionId))

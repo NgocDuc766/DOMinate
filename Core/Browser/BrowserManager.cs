@@ -10,7 +10,7 @@ namespace Core.Browser
 {
     public class BrowserManager
     {
-        public IWebDriver CreateDriver()
+        public static IWebDriver CreateDriver()
         {
             var options = new ChromeOptions();
             options.AddArgument("--no-sandbox");

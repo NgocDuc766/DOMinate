@@ -10,10 +10,6 @@ namespace Core.Workflow.WebActions
 {
     public class MouseDoubleClick : BaseAction
     {
-        public MouseDoubleClick(IWebDriver driver) : base(driver)
-        {
-        }
-
         public override JObject GetDefaultPayload()
         {
             throw new NotImplementedException();

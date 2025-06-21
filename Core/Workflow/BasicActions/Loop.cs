@@ -1,45 +1,39 @@
 ﻿using Core.Models;
 using System;
+using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
 
 namespace Core.Workflow.BasicActions
 {
-    public class Loop
+    public class Loop : BaseAction
     {
-        private readonly WorkflowModel _workflow;
-        private readonly int _times;
-
-        public Loop(WorkflowModel workflow, int times)
+        protected override dynamic PerformAction()
         {
-            _workflow = workflow ?? throw new ArgumentNullException(nameof(workflow));
-            _times = times <= 0 ? throw new ArgumentException("Số lần lặp phải lớn hơn 0") : times;
+            // parse workflow từ payload sang workflow object
+            WorkflowModel workflowModel = Payload["Workflow"].ToObject<WorkflowModel>()
+                ?? throw new ArgumentException("Workflow must provide in payload object");
+            
+            int iteration = 0;
+            
+            
+            return "...";
         }
-
-        public void Execute()
+        // condition là kết quả của action khác
+        // key: condition, value: xpath => cái này được lưu global variables
+        // 
+        protected internal override void ValidatePayload()
         {
-            for (int i = 0; i < _times; i++)
+            if (Payload == null)
             {
-                Console.WriteLine($" Lặp lần thứ {i + 1}");
-
-                foreach (var action in _workflow.Workflow)
-                {
-                    try
-                    {
-                        Console.WriteLine($" Thực hiện action: {action.ActionName} ({action.ActionType})");
-
-                        var result = action.GetType()
-                                           .GetMethod("PerformAction", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                                           ?.Invoke(action, null);
-
-                        Console.WriteLine($" Kết quả: {result}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($" Lỗi ở action {action.ActionType}: {ex.Message}");
-                    }
-                }
+                throw new ArgumentException(nameof(Payload),"Payload is null");
             }
 
-            Console.WriteLine(" Đã hoàn thành tất cả các vòng lặp.");
+            if (!Payload.ContainsKey("Workflow") || Payload["Workflow"] == null)
+            {
+                throw new ArgumentException("Payload does not contain a Workflow object");
+            }
         }
+
+        public override JObject GetDefaultPayload() => new JObject();
     }
 }

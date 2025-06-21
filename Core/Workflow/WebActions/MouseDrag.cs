@@ -10,9 +10,6 @@ namespace Core.Workflow.WebActions
 {
     public class MouseDrag : BaseAction
     {
-        public MouseDrag(IWebDriver driver) : base(driver)
-        {
-        }
 
         public override JObject GetDefaultPayload()
         {

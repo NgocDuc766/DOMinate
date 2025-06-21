@@ -10,9 +10,6 @@ namespace Core.Workflow.WebActions
 {
     public class ScrollToBottom : BaseAction
     {
-        public ScrollToBottom(IWebDriver driver) : base(driver)
-        {
-        }
 
         public override JObject GetDefaultPayload()
         {

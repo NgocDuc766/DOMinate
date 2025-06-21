@@ -27,7 +27,7 @@ namespace Core.Workflow
         public IWebDriver WebDriver { get; set; }
 
         // constructor with web driver
-        public BaseAction(IWebDriver driver)
+        public void SetDriver(IWebDriver driver)
         {
             WebDriver = driver ?? throw new ArgumentNullException(nameof(driver), "Web driver cannot be null!");
         }
@@ -39,6 +39,10 @@ namespace Core.Workflow
 
         public dynamic Execute()
         {
+            if (WebDriver == null)
+            {
+                throw new NullReferenceException("Web driver cannot be null!");
+            }
             Console.WriteLine($"Executing action: ID: '{Id}', Type: '{ActionType}' with payload: '{Payload}' at '{DateTime.Now}'");
             var resultAction = PerformAction();
 

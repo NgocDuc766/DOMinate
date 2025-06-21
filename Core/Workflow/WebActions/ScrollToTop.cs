@@ -11,34 +11,31 @@ namespace Core.Workflow.WebActions
 {
     public class ScrollToTop : BaseAction
     {
-        public ScrollToTop(IWebDriver driver) : base(driver)
-        {
-        }
 
         public override JObject GetDefaultPayload()
         {
             return new JObject
             {
-                ["DelayTime"] = 1000
+                ["Delay"] = 1000
             };
         }
 
         protected override dynamic PerformAction()
         {
             ValidatePayload();
-            HandleScrollToTop(Payload["DelayTime"].ToString());
+            HandleScrollToTop(Payload["Delay"].ToString());
             return "Scroll to top performed";
         }
 
         protected internal override void ValidatePayload()
         {
-            if (!Payload.ContainsKey("DelayTime"))
+            if (!Payload.ContainsKey("Delay"))
             {
-                throw new ArgumentException("DelayTime is required!");
+                throw new ArgumentException("Delay is required!");
             }
-            if (!int.TryParse(Payload["DelayTime"].ToString(), out int delay) || delay < 0)
+            if (!int.TryParse(Payload["Delay"].ToString(), out int delay) || delay < 0)
             {
-                throw new ArgumentException("DelayTime must be a non-negative integer!");
+                throw new ArgumentException("Delay must be a non-negative integer!");
             }
         }
 

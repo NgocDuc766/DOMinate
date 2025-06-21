@@ -11,9 +11,6 @@ namespace Core.Workflow.WebActions
 {
     public class MouseMove : BaseAction
     {
-        public MouseMove(IWebDriver driver) : base(driver)
-        {
-        }
 
         public override JObject GetDefaultPayload()
         {
@@ -69,6 +66,8 @@ namespace Core.Workflow.WebActions
 
                 // move by coordinates              
                 actions.MoveByOffset(x, y).Perform();
+                
+                // delay
             }
         }
     }

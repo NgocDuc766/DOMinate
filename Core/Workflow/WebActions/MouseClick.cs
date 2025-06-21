@@ -11,9 +11,6 @@ namespace Core.Workflow.WebActions
 {
     public class MouseClick : BaseAction
     {
-        public MouseClick(IWebDriver driver) : base(driver)
-        {
-        }
 
         public override JObject GetDefaultPayload()
         {
@@ -26,7 +23,6 @@ namespace Core.Workflow.WebActions
 
         protected override dynamic PerformAction()
         {
-            ValidatePayload();
             HandleWithClickType(Payload["ClickType"].ToString());
             return "Mouse click performed";
         }
@@ -35,15 +31,19 @@ namespace Core.Workflow.WebActions
         {
             if (!Payload.ContainsKey("ClickType"))
             {
-                throw new ArgumentException("ClickType is requred!");
+                throw new ArgumentException("ClickType is required!");
             }
-            if (!Payload.ContainsKey("Xpath"))
+            if (!Payload.ContainsKey("Xpath") && Payload["ClickType"].ToString().Equals("Xpath"))
             {
                 throw new ArgumentException("Xpath is required!");
             }
-            if (!Payload.ContainsKey("Coordinates"))
+            if (!Payload.ContainsKey("Coordinates") && Payload["ClickType"].ToString().Equals("Coordinates"))
             {
                 throw new ArgumentException("Coordinates is required!");
+            }
+            if (!int.TryParse(Payload["Delay"].ToString(), out int delay) || delay < 0)
+            {
+                throw new ArgumentException("Delay must be a non-negative integer!");
             }
         }
 
@@ -73,6 +73,9 @@ namespace Core.Workflow.WebActions
                 Actions actions = new Actions(WebDriver);
                 actions.MoveByOffset(x, y).Click().Perform();
             }
+            // delay
+            int delayTime = int.Parse(Payload["Delay"].ToString());
+            System.Threading.Thread.Sleep(delayTime);
         }
     }
 }
