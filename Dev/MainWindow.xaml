@@ -3,86 +3,112 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Dev"
+        xmlns:local="clr-namespace:Dev" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
+        
+        WindowStyle="None"
+        AllowsTransparency="True" 
+        
         KeyDown="MainWindow_KeyDown"
         FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Self}}"
         Title="Workflow Editor" Height="500" Width="1100"
-        Background="#151A1C">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="4*" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
+        Background="#E6E6E6">
 
-        <StackPanel Grid.Column="0" Margin="10">
-            <!-- Hai nút nằm trên cùng một dòng -->
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Global Variables" FontWeight="Bold" Padding="10" Margin="5" Background="#1D2326"/>
-                <Button Content="User Datas" FontWeight="Bold" Padding="10" Margin="5" Background="#1D2326" Width="116"/>
-            </StackPanel>
+    <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="12" >
+        <Grid>
+            <!-- Thanh tiêu đề tùy biến -->
+            <DockPanel Background="#337DFF" Height="30" VerticalAlignment="Top" MouseLeftButtonDown="TitleBar_MouseDown">
+                <!-- Menu bên trái -->
+                <Menu DockPanel.Dock="Left" VerticalAlignment="Center" Background="Transparent" Foreground="White">
+                    <MenuItem Header="File"/>
+                    <MenuItem Header="Edit"/>
+                    <MenuItem Header="Debug"/>
+                </Menu>
 
-            <!-- Khu vực nhập biến người dùng -->
-            <Grid Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <!-- Các nút hệ thống bên phải -->
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_" Click="Minimize_Click" Background="Transparent"/>
+                    <Button Content="🗖" Click="Maximize_Click" Background="Transparent"/>
+                    <Button Content="✕" Click="Close_Click" Background="Transparent"/>
+                </StackPanel>
+            </DockPanel>
 
-                <TextBlock Text="Enter variable:" FontWeight="Bold" Grid.Row="0" Foreground="White"/>
-                <!--<TextBox Grid.Row="1" Width="150" Margin="5"/>-->
-            </Grid>
-        </StackPanel>
+            <!-- Nội dung còn lại -->
+            <Grid Margin="0,30,0,0">
+                <!-- Nội dung chính ở đây -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
 
-        <!-- Khu vực làm việc chính -->
-        <Grid Grid.Column="1" Background="#657A85" Margin="10">
-            <StackPanel x:Name="ActionListPanel" Margin="10">
-                <TextBlock Text="Workflow Editor"
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <!-- Hai nút nằm trên cùng một dòng -->
+
+                        <!-- Khu vực nhập biến người dùng -->
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Enter variable:" FontWeight="Bold" Grid.Row="0" />
+                            <Border Grid.Row="1" Height="200"/>
+                            <!--cho cac bien vao trong 1 datagird-->
+
+                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                <Button Content="Global Variables" FontWeight="Bold" Margin="5"/>
+                                <Button Content="User Datas" FontWeight="Bold" Margin="5"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Khu vực làm việc chính -->
+                    <Grid Grid.Column="1" Background="#FFFFFF" Margin="10">
+                        <StackPanel x:Name="ActionListPanel" Margin="10">
+                            <TextBlock Text="Main Workflow"
                    FontSize="18"
                    FontWeight="Bold"
-                   Foreground="White"
+                   
                    HorizontalAlignment="Center"
                    Margin="0,0,0,10"/>
-                <!-- Các Button sẽ được thêm vào đây -->
-                <StackPanel Tag="Default"  Orientation="Horizontal" Margin="0">
-                    <Button Content="Before browser open" Padding="10" Margin="5"
-            Background="#1D2326" Foreground="White" FontWeight="Bold" MinWidth="200px" Click="DefaultButton_Click"/>
-                </StackPanel>
-                <StackPanel Tag="Default" Orientation="Horizontal" Margin="0">
-                    <Button Content="Main logic" Padding="10" Margin="5"
-            Background="#1D2326" Foreground="White" FontWeight="Bold" MinWidth="200px" Click="DefaultButton_Click" AutomationProperties.Name="mainlogic"/>
-                </StackPanel>
-                <StackPanel Tag="Default" Orientation="Horizontal" Margin="0">
-                    <Button Content="After browser close" Padding="10" Margin="5"
-            Background="#1D2326" Foreground="White" FontWeight="Bold" MinWidth="200px" Click="DefaultButton_Click" />
-                </StackPanel>
-
-            </StackPanel>
-        </Grid>
-
-
-        <StackPanel Grid.Column="2" Margin="10">
-
-            <Button Content="Add new action" Width="120" Click="btn_add_action_Click" HorizontalAlignment="Center"/>
-
-            <Popup x:Name="ActionPopup" StaysOpen="False" Placement="Mouse">
-                <Border BorderBrush="Black" BorderThickness="1" Background="#657A85" Padding="10">
-                    <StackPanel>
-                        <TextBlock Text="Select Action Type:" FontWeight="Bold" Margin="5"/>
-                        <ComboBox x:Name="ActionComboBox" Width="200" Margin="5" SelectedIndex="0">
-                            <ComboBoxItem Content="Send Key"/>
-                            <ComboBoxItem Content="Click Button"/>
-                            <ComboBoxItem Content="Open File"/>
-                            <ComboBoxItem Content="Execute Script"/>
-                        </ComboBox>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="Cancel" Click="btn_cancel_Click" Margin="5"/>
-                            <Button Content="Add" Click="btn_confirm_Click" Margin="5"/>
+                            <!-- Các Button sẽ được thêm vào đây -->
+                            <StackPanel Tag="Default"  Orientation="Horizontal" Margin="0"/>
+                            <StackPanel Tag="Default" Orientation="Horizontal" Margin="0"/>
+                            <StackPanel Tag="Default" Orientation="Horizontal" Margin="0"/>
                         </StackPanel>
+                    </Grid>
+
+
+                    <StackPanel Grid.Column="2" Margin="10">
+
+                        <Button Content="Add new action" Width="120" Click="btn_add_action_Click" HorizontalAlignment="Center" Background="#BFD8FF"/>
+
+                        <Popup x:Name="ActionPopup" StaysOpen="False" Placement="Mouse"  AllowsTransparency="True" PopupAnimation="Fade">
+                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="8" Background="#C6DCFF" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="Select Action Type:" FontWeight="Bold" Margin="5"/>
+                                    <ComboBox x:Name="ActionComboBox" Width="200" Margin="5" SelectedIndex="0">
+                                        <ComboBoxItem Content="Send Key"/>
+                                        <ComboBoxItem Content="Click Button"/>
+                                        <ComboBoxItem Content="Open File"/>
+                                        <ComboBoxItem Content="Execute Script"/>
+                                    </ComboBox>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="Cancel" Click="btn_cancel_Click" Margin="5"/>
+                                        <Button Content="Add" Click="btn_confirm_Click" Margin="5"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
                     </StackPanel>
-                </Border>
-            </Popup>
-        </StackPanel>
-    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+
 </Window>

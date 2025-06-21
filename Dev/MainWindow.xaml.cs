@@ -71,8 +71,8 @@ namespace Dev
                     Tag = newDepth,
                     Margin = buttonMargin,
                     Padding = new Thickness(10),
-                    Background = new SolidColorBrush(Color.FromRgb(29, 35, 38)),
-                    Foreground = Brushes.White,
+                    Background = new SolidColorBrush(Color.FromRgb(204, 224, 255)),
+                    Foreground = Brushes.Black,
                     FontWeight = FontWeights.Bold
                 };
 
@@ -227,14 +227,39 @@ namespace Dev
             {
                 foreach (var b in sp.Children.OfType<Button>())
                 {
-                    b.Background = new SolidColorBrush(Color.FromRgb(29, 35, 38));
+                    b.Background = new SolidColorBrush(Color.FromRgb(194, 194, 192));
                 }
             }
 
             if (selectedButton != null)
             {
-                selectedButton.Background = new SolidColorBrush(Color.FromRgb(50, 50, 50));
+                selectedButton.Background = new SolidColorBrush(Color.FromRgb(194, 194, 192));
             }
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+
+        }
+
+        private void Maximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
+                this.WindowState = WindowState.Maximized;
+            else
+                this.WindowState = WindowState.Normal;
+
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }
